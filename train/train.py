@@ -75,52 +75,39 @@ class Train:
             self.test_acc_metric.reset_states()
                 
             
+if __name__ == "__main__":
+    batch_size=64
+    (x_train,y_train),(x_test,y_test)=krs.datasets.cifar10.load_data()
+    x_train=x_train.astype('float32')/255
+    x_test=x_test.astype('float32')/255
 
-"""
-    def train(self,epochs):
-        for epoch in range(epochs):
-            for step, (x_batch_train,y_batch_train) in enumerate(self.trainDs):
+    class_names=['airplane', 'automobile', 'bird', 'cat', 'deer',
+                'dog', 'frog', 'horse', 'ship', 'truck']
 
-                with tf.GradientTape() as tape:
-                    logits=self.model(x_batch_train,training=True)
-                    loss_value=self.lossFn(y_batch_train,logits)
-                
-                grads=tape.gradient(loss_value,self.model.trainable_weights)
+    y_train=krs.utils.to_categorical(y_train,num_classes=10)
+    y_test=krs.utils.to_categorical(y_test,num_classes=10)
 
-                self.optimizer.apply_gradients(zip(grads,self.model.trainable_weights))
-"""
-batch_size=64
-(x_train,y_train),(x_test,y_test)=krs.datasets.cifar10.load_data()
-x_train=x_train.astype('float32')/255
-x_test=x_test.astype('float32')/255
-
-class_names=['airplane', 'automobile', 'bird', 'cat', 'deer',
-               'dog', 'frog', 'horse', 'ship', 'truck']
-
-y_train=krs.utils.to_categorical(y_train,num_classes=10)
-y_test=krs.utils.to_categorical(y_test,num_classes=10)
-
-train_dataset=tf.data.Dataset.from_tensor_slices((x_train,y_train))
-train_dataset=train_dataset.shuffle(buffer_size=1024).batch(batch_size)
+    train_dataset=tf.data.Dataset.from_tensor_slices((x_train,y_train))
+    train_dataset=train_dataset.shuffle(buffer_size=1024).batch(batch_size)
 
 
-test_dataset=tf.data.Dataset.from_tensor_slices((x_test,y_test))
-test_dataset=test_dataset.batch(batch_size)
+    test_dataset=tf.data.Dataset.from_tensor_slices((x_test,y_test))
+    test_dataset=test_dataset.batch(batch_size)
 
-model=MiniInception(10)
+    model=MiniInception(10)
 
-lossFn=krs.losses.CategoricalCrossentropy()
-optimizer=krs.optimizers.Adam()
+    lossFn=krs.losses.CategoricalCrossentropy()
+    optimizer=krs.optimizers.Adam()
 
-train_acc_metric=krs.metrics.CategoricalAccuracy()
-test_acc_metric=krs.metrics.CategoricalAccuracy()
+    train_acc_metric=krs.metrics.CategoricalAccuracy()
+    test_acc_metric=krs.metrics.CategoricalAccuracy()
 
-train_writer=tf.summary.create_file_writer('logs/train/')
-test_writer= tf.summary.create_file_writer('logs/test/')
+    train_writer=tf.summary.create_file_writer('logs/train/')
+    test_writer= tf.summary.create_file_writer('logs/test/')
 
 
-train=Train(model,train_dataset,test_dataset,lossFn,optimizer,train_acc_metric,test_acc_metric,train_writer,test_writer)
+    train=Train(model,train_dataset,test_dataset,lossFn,optimizer,train_acc_metric,test_acc_metric,train_writer,test_writer)
 
-train.train(epochs=2)
+    train.train(epochs=2)
 
 
