@@ -1,5 +1,5 @@
 # ImageClassification
-<h1>this project is built of some customized layers block to be trained on image classification tasks based on the idea of Inception</h1>
+<h1>This project is built of some customized layers block to be trained on image classification tasks based on the idea of Inception</h1>
 <img src="/images/0_CAFo0A-z6w7xn8Le.jpeg">
 <h1>Customized Layers</h1>
 <p>This folder contains three customized layers and one miniInception model. The first block is the ConvModule. In this block there are two consecutive 
